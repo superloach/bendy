@@ -2,7 +2,7 @@ module github.com/superloach/bendy
 
 go 1.14
 
-replace github.com/thesephist/ink => ../ink
+replace github.com/thesephist/ink => github.com/superloach/ink
 
 require (
 	github.com/gobuffalo/packr/v2 v2.8.0

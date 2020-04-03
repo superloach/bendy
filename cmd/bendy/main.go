@@ -8,7 +8,7 @@ import (
 	"github.com/gobuffalo/packr/v2"
 )
 
-var file = flag.String("file", "builtin", "source code")
+var file = flag.String("file", "", "source code")
 
 var box = packr.New("builtin game", ".")
 
@@ -19,13 +19,13 @@ func main() {
 	var f io.Reader
 	var err error
 
-	if *file == "builtin" {
-		if box.Has("builtin.ink") {
-			f, err = box.Open("builtin.ink")
-			if err != nil {
-				panic(err)
-			}
-		} else {
+	if box.Has("builtin.ink") {
+		f, err = box.Open("builtin.ink")
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		if *file == "" {
 			if len(args) < 1 {
 				println("please provide a -file flag")
 				flag.Usage()
