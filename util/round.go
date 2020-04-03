@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/thesephist/ink/pkg/ink"
+	"github.com/superloach/ink/pkg/ink"
 )
 
 func RoundFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {

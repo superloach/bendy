@@ -3,7 +3,7 @@ package bendy
 import (
 	"io"
 
-	"github.com/thesephist/ink/pkg/ink"
+	"github.com/superloach/ink/pkg/ink"
 	"github.com/superloach/bendy/util"
 )
 

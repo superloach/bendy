@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"image/color"
 
-	"github.com/thesephist/ink/pkg/ink"
+	"github.com/superloach/ink/pkg/ink"
 )
 
 const (

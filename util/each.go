@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/thesephist/ink/pkg/ink"
+	"github.com/superloach/ink/pkg/ink"
 )
 
 func EachFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {

@@ -3,7 +3,7 @@ package util
 import (
 	"fmt"
 
-	"github.com/thesephist/ink/pkg/ink"
+	"github.com/superloach/ink/pkg/ink"
 )
 
 func LogFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
