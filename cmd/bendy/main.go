@@ -1,31 +1,47 @@
 package main
 
 import (
-	"flag"
 	"os"
+	"io"
+	"flag"
+
+	"github.com/gobuffalo/packr/v2"
 )
 
-var file = flag.String("file", "", "source file")
+var file = flag.String("file", "builtin", "source code")
+
+var box = packr.New("builtin game", ".")
 
 func main() {
 	flag.Parse()
-
 	args := flag.Args()
 
-	if *file == "" {
-		if len(args) == 0 {
-			panic("provide a file")
+	var f io.Reader
+	var err error
+
+	if *file == "builtin" {
+		if box.Has("builtin.ink") {
+			f, err = box.Open("builtin.ink")
+			if err != nil {
+				panic(err)
+			}
 		} else {
-			*file = args[0]
-			args = args[1:]
+			if len(args) < 1 {
+				println("please provide a -file flag")
+				flag.Usage()
+				return
+			} else {
+				*file = args[0]
+				args = args[1:]
+
+				f, err := os.Open(*file)
+				if err != nil {
+					panic(err)
+				}
+				defer f.Close()
+			}
 		}
 	}
-
-	f, err := os.Open(*file)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
 
 	game, err := newGame()
 	if err != nil {

@@ -1,3 +1,6 @@
+# builtin game file
+/cmd/bendy/builtin.ink
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
