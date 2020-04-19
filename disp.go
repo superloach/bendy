@@ -7,11 +7,7 @@ import (
 	"github.com/superloach/ink/pkg/ink"
 )
 
-const (
-	DispWidth     = 128
-	DispHeight    = 96
-	DispNumColors = 1 << 6
-)
+const DispNumColors = 1 << 6
 
 var DispColors [DispNumColors]color.RGBA64
 
@@ -26,17 +22,30 @@ func init() {
 }
 
 func (b *Bendy) poke(x, y, color int) {
-	if x < 0 || x >= DispWidth {
+	if x < 0 || x >= b.Width {
 		return
 	}
 
-	if y < 0 || y >= DispHeight {
+	if y < 0 || y >= b.Height {
 		return
 	}
 
 	if b.Poke != nil {
 		b.Poke(x, y, color)
 	}
+}
+
+func (b *Bendy) SizeFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
+	usage := fmt.Errorf("size()")
+
+	if len(args) != 0 {
+		return nil, usage
+	}
+
+	return ink.CompositeValue{
+		"w": ink.NumberValue(b.Width),
+		"h": ink.NumberValue(b.Height),
+	}, nil
 }
 
 func (b *Bendy) PokeFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
@@ -66,11 +75,11 @@ func (b *Bendy) PokeFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 		return nil, usage
 	}
 
-	if x < 0 || x >= DispWidth {
+	if x < 0 || x >= b.Width {
 		return nil, nil
 	}
 
-	if y < 0 || y >= DispHeight {
+	if y < 0 || y >= b.Height {
 		return nil, nil
 	}
 
@@ -98,8 +107,8 @@ func (b *Bendy) ClearFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 		return nil, usage
 	}
 
-	for x := 0; x < DispWidth; x++ {
-		for y := 0; y < DispHeight; y++ {
+	for x := 0; x < b.Width; x++ {
+		for y := 0; y < b.Height; y++ {
 			b.poke(x, y, color)
 		}
 	}
@@ -171,58 +180,6 @@ func (b *Bendy) LineFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 		for y := 0.0; y < dy; y++ {
 			x := dx * (y / dy)
 			b.poke(int(x1+x), int(y1+y), color)
-		}
-	}
-
-	return nil, nil
-}
-
-func (b *Bendy) TextFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
-	usage := fmt.Errorf("text(text, x, y, [color])")
-
-	if len(args) == 3 {
-		args = append(args, ink.NumberValue(63))
-	}
-	if len(args) != 4 {
-		return nil, usage
-	}
-
-	var text string
-	var x, y float64
-	var color int
-
-	if textv, ok := args[0].(ink.StringValue); ok {
-		text = string(textv)
-	} else {
-		text = args[0].String()
-	}
-
-	if xv, ok := args[1].(ink.NumberValue); ok {
-		x = float64(xv)
-	} else {
-		return nil, usage
-	}
-
-	if yv, ok := args[2].(ink.NumberValue); ok {
-		y = float64(yv)
-	} else {
-		return nil, usage
-	}
-
-	if colorv, ok := args[3].(ink.NumberValue); ok {
-		color = int(colorv)
-	} else {
-		return nil, usage
-	}
-
-	ox := x
-	for _, r := range text {
-		if r == '\n' {
-			x = ox
-			y += LetterHeight + 1
-		} else {
-			b.letter(r, x, y, color)
-			x += LetterWidth + 1
 		}
 	}
 

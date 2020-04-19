@@ -43,9 +43,9 @@ func SeqFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 	n := min
 	i := 0
 	for n < max {
+		seq[strconv.Itoa(i+1)] = ink.NumberValue(n)
 		n += inc
 		i++
-		seq[strconv.Itoa(i)] = ink.NumberValue(n)
 	}
 
 	return seq, nil

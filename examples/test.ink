@@ -1,22 +1,30 @@
-text('Hello, World!
+state := {
+	x: 64,
+	y: 64,
+	c: 0,
+}
+
+t := 'Hello, World!
 
 1234567890ABCDEFGHIJK
 LMNOPQRSTUVWXYZabcdef
 ghijklmnopqrstuvwxyz`
 ~!@#$%^&*()-_=+[{]}\\|
-;:\'",<.>/?', 1, 1)
-a := {
-	(0): 5
-	(1): 10
-	(2): 15
-}
-log(a)
-log(a.(0))
-a.(0) := 0
-log(a)
-log(a.(0))
-a.b := 1
-log(a)
-log(a.b)
-a := seq(1, 11)
-log(a)
+;:\'",<.>/?'
+
+mksprite('foo', 5, '
+.....
+.   .
+.   .
+.   .
+.....
+')
+
+register('update', () => (
+	sprite('foo', 64, 64, state.c)
+	text(t, 1, 1, state.c)
+))
+
+register('key', () => (
+	state.c := state.c + 1
+))

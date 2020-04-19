@@ -34,7 +34,7 @@ func RoundFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 
 	mult := math.Pow10(-places)
 
-	num = math.Round(num / mult) * mult
+	num = math.Round(num/mult) * mult
 
 	return ink.NumberValue(num), nil
 }

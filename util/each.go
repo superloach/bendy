@@ -18,8 +18,15 @@ func EachFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 	var fn ink.Value
 
 	if listv, ok := args[0].(ink.CompositeValue); ok {
-		for _, v := range listv {
-			list = append(list, v)
+		list = make([]ink.Value, len(listv))
+
+		for k, v := range listv {
+			i, err := strconv.Atoi(k)
+			if err != nil {
+				return nil, err
+			}
+
+			list[i - 1] = v
 		}
 	}
 
@@ -35,7 +42,7 @@ func EachFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
 			return vals, err
 		}
 
-		vals[strconv.Itoa(i)] = val
+		vals[strconv.Itoa(i + 1)] = val
 	}
 
 	return vals, nil

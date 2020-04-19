@@ -1,5 +1,11 @@
 package bendy
 
+import (
+	"fmt"
+
+	"github.com/superloach/ink/pkg/ink"
+)
+
 const LetterWidth = 5
 const LetterHeight = 7
 
@@ -103,7 +109,7 @@ var Letters = map[rune]Letter{
 	'?':  " ... .   .    .   .   .         .  ",
 }
 
-func (b *Bendy) letter(r rune, x, y float64, color int) {
+func (b *Bendy) letter(r rune, x, y int, color int) {
 	l, ok := Letters[r]
 	if !ok {
 		l = Letters['#']
@@ -112,6 +118,58 @@ func (b *Bendy) letter(r rune, x, y float64, color int) {
 		if l[i] == ' ' {
 			continue
 		}
-		b.poke(int(x)+i%LetterWidth, int(y)+i/LetterWidth, color)
+		b.poke(x+i%LetterWidth, y+i/LetterWidth, color)
 	}
+}
+
+func (b *Bendy) TextFn(ctx *ink.Context, args []ink.Value) (ink.Value, error) {
+	usage := fmt.Errorf("text(text, x, y, [color])")
+
+	if len(args) == 3 {
+		args = append(args, ink.NumberValue(63))
+	}
+	if len(args) != 4 {
+		return nil, usage
+	}
+
+	var text string
+	var x, y int
+	var color int
+
+	if textv, ok := args[0].(ink.StringValue); ok {
+		text = string(textv)
+	} else {
+		text = args[0].String()
+	}
+
+	if xv, ok := args[1].(ink.NumberValue); ok {
+		x = int(xv)
+	} else {
+		return nil, usage
+	}
+
+	if yv, ok := args[2].(ink.NumberValue); ok {
+		y = int(yv)
+	} else {
+		return nil, usage
+	}
+
+	if colorv, ok := args[3].(ink.NumberValue); ok {
+		color = int(colorv)
+	} else {
+		return nil, usage
+	}
+
+	ox := x
+	for _, r := range text {
+		if r == '\n' {
+			x = ox
+			y += LetterHeight + 1
+		} else {
+			b.letter(r, x, y, color)
+			x += LetterWidth + 1
+		}
+	}
+
+	return nil, nil
 }
