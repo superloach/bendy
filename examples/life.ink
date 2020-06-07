@@ -77,4 +77,4 @@ register('update', () => (
 	s.cells := c
 ))
 
-register('keydown', n => randcells())
+register('key', n => randcells())
