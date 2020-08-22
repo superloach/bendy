@@ -1,3 +1,5 @@
+archiving bcus my ink fork is gone and this was kinda garbage
+
 # bendy
 A Fantasy Console using the Ink scripting language.
 
